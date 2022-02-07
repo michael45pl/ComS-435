@@ -1,0 +1,22 @@
+package searchEngineComp;
+
+import test.Graph;
+import test.PageRank;
+
+public class Test {
+	
+	public static void main(String args[]){
+
+		String graphFileName = "wikiSportsGraph.txt";
+		Graph graph = new Graph(graphFileName);
+		
+		
+
+		
+		PageRank pr = new PageRank(graph);
+		pr.pageRank((float)0.5, (float).001, graph);
+		pr.topKPageRank(10);
+	}
+	
+
+}

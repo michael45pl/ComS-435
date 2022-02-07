@@ -1,0 +1,42 @@
+package bloomfilters;
+
+public class Test {
+
+	public static void main (String[] args) {
+		String s = "Hello";
+		System.out.println(s.getBytes());
+		System.out.println(hash(s));
+		System.out.println(hash(s+1));
+		System.out.println(s.hashCode());
+	}
+
+	private static final long FNV_64_INIT = 0xcbf29ce484222325L;
+	private static final long FNV_64_PRIME = 1099511628211L;
+
+	public static int hash(String s) {
+		return hash(s.getBytes());
+	}
+
+	public static int hash(byte[] a) {
+		int filterSize = 100;
+		long result = FNV_64_INIT;
+		int len = a.length;
+		for(int i = 0; i < len; i++) {
+			result ^= a[i];
+			result = result * FNV_64_PRIME;
+		}
+		return mod(result, filterSize);
+	}
+	
+	public static int mod(long x, long y) {
+		long result = x % y;
+		if(result < 0) {
+			result += y;
+		}
+		Long l = new Long(result);
+		return l.intValue();
+	}
+
+}
+
+

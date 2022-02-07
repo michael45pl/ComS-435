@@ -1,0 +1,72 @@
+package bloomfilters;
+
+public class NaiveBloomFilter {
+
+	public int filterSize;
+	public int numData;
+	public int numHashes;	
+	public int[] filter;
+	public HashFunction[] hashFunc;
+	
+	
+	public NaiveBloomFilter(int setSize, int bitsPerElement)
+	{
+		filterSize = setSize * bitsPerElement;
+		numHashes = (int) Math.round(Math.log(2) * (filterSize / setSize));
+		filter = new int[filterSize];
+		hashFunc = new HashFunction[1];
+		numData = 0;
+	}
+	
+
+	public void add(String s)
+	{
+		int key;
+		s = s.toLowerCase();
+		
+		if(!appears(s)){
+			numData++;
+		}
+	
+		for(int i = 0; i < numHashes; i++){
+			s = s + i;
+			key = hashFunc[0].hash(s);
+			filter[key] = 1;
+		}	
+	}	
+
+	
+	public boolean appears(String s)
+	{
+		int key;
+		s = s.toLowerCase();
+		
+		for(int i = 0; i < numHashes; i++){
+			s = s + i;
+			key = hashFunc[0].hash(s);
+			if(filter[key] != 1){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
+	public int filterSize()
+	{
+		return filterSize;
+	}
+	
+	
+	public int dataSize()
+	{
+		return numData;
+	}
+	
+
+	public int numHashes()
+	{
+		return numHashes;
+	}
+	
+}

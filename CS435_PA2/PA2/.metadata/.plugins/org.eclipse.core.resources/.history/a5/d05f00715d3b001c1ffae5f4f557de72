@@ -1,0 +1,112 @@
+package multisets;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.TreeSet;
+
+public class MinHash {
+
+	private String folderPath;
+	private int numPermutations;
+	private TreeSet<String> allTerms;
+	private ArrayList<Document> allDocuments;
+	private int numTerms;
+	private int modP;
+	
+	private ArrayList<ParameterPair> paraList;
+	
+	private int minHashMatrix[][];
+	private int termDocMatrix[][];
+	
+
+	/**
+	 * Constructor class to set all my necessary values and calls the addDocument and my
+	 * helper functions.
+	 * @param folder 
+	 * @param numPermutations
+	 * @throws IOException
+	 */
+	public MinHash(String folder, int numPermutations) throws IOException{
+		folderPath = folder;
+		this.numPermutations = numPermutations;
+		allDocuments = new ArrayList<Document>();
+		allTerms = new TreeSet<String>();
+		paraList = new ArrayList<ParameterPair>();
+		addDocuments();
+
+		numTerms = allTerms.size();
+		termDocMatrix = new int[allDocuments.size()][numTerms];
+		minHashMatrix = new int[numPermutations][allDocuments.size()];
+		modP = HelperFunctions.nextPrime(numTerms*10);//gets the next Prime from helper function
+		paraList = HelperFunctions.getParameters(this.numPermutations, this.numTerms);//get a and b from helper functions
+	}
+
+	/**
+	 * Returns the names of all documents in the given folder
+	 * @return String array of document names
+	 */
+	public String[] allDocs(){
+		File f = new File(folderPath);
+		return f.list();
+	}
+
+	public int[][] termDocumentMatrix() {
+		return termDocMatrix;
+	}
+
+	public int permutationDomain() {
+		return numTerms;
+	}
+	
+	public int numPermutations(){
+		return numPermutations;
+	}
+
+	public int[][] minHashMatrix(){
+		Document d;
+		for(int i=0;i<allDocuments.size();i++){
+			d = allDocuments.get(i);
+			for(int j=0;j<numPermutations;j++){
+				minHashMatrix[j][i] = d.getMinHashs().get(i);
+			}
+		}
+		return this.minHashMatrix;
+	}
+
+
+	private void addDocuments() throws IOException{
+		File folder = new File(this.folderPath);	
+		File[] listOfFiles = folder.listFiles();
+		System.out.println(this.folderPath+" contains "+listOfFiles.length+" files.\n");
+		Document d;
+		ArrayList<String> positions = new ArrayList<String>();
+		for(int i=0;i<listOfFiles.length;i++){
+			d = new Document(listOfFiles[i].getAbsolutePath());	
+			this.allDocuments.add(d);
+			for(String s:d.getTerms()){
+				this.allTerms.add(s);
+				if(!positions.contains(s)) {
+					positions.add(s);
+				}
+				termDocMatrix[i][positions.indexOf(s)]=d.termMap.get(s);
+			}
+			
+		}
+	}
+
+	public ArrayList<ParameterPair> getParaList() {
+		return paraList;
+	}
+	
+	public int getModP() {
+		return modP;
+	}
+	
+	public ArrayList<Document> getAllDocuments() {
+		return allDocuments;
+	}
+	
+	
+
+}

@@ -1,0 +1,25 @@
+package multisets;
+
+public class MinHashSimilarities extends MinHash{
+	
+	
+	public MinHashSimilarities(String folder, int numPermutations) {
+		super(folder, numPermutations);
+		
+		
+	}
+
+	public double exactJaccard(String file1, String file2) {
+		return 0;
+		
+	}
+	
+	public double approximateJaccard(String file1, String file2) {
+		return 0;
+	}
+	
+	public int[] minHashSig(String fileName) {
+		return null;
+	}
+	
+}

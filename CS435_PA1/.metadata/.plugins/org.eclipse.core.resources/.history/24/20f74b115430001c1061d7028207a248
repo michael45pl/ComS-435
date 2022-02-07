@@ -1,0 +1,35 @@
+package bloomfilters;
+
+
+public class BloomFilterFNV extends BloomFilter{
+
+	  
+	  public BloomFilterFNV(int setSize, int bitsPerElement) {
+		  super(setSize, bitsPerElement);
+		  hashFuncs[0] = new HashFunctionFNV();
+	  }
+	  
+	  private class HashFunctionFNV extends HashFunction
+	  {
+		  private static final long FNV_64_INIT = 0xcbf29ce484222325L;
+		  private static final long FNV_64_PRIME = 0x100000001b3L;
+		  private static final long FNV_64_BIG = 0x100000001b3L;
+
+		  
+		  public int hash(String s) {
+			  return hash(s.getBytes());
+		  }
+		  
+		  public int hash(byte[] a) {
+			  long result = FNV_64_INIT;
+			  int len = a.length;
+			  for(int i = 0; i < len; i++) {
+				  result ^= a[i];
+				  result = mod(result * FNV_64_PRIME, FNV_64_BIG);
+			  }
+			  return mod(result, filterSize);
+		  }
+	  }
+	  
+}
+	 

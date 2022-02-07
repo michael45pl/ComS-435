@@ -1,0 +1,20 @@
+package multisets;
+
+import java.io.IOException;
+
+import multisets.SimilarDocuments;
+
+public class test {
+
+	
+	public static void main(String[] args) throws IOException {
+		String folder = "/Users/michaelk/Desktop/LSHData";
+		int n = 600;
+		double s = 0.04;
+		SimilarDocuments sd = new SimilarDocuments(folder, n, s);
+		sd.similaritySearch("baseball0.txt");
+	}
+
+	
+	
+}

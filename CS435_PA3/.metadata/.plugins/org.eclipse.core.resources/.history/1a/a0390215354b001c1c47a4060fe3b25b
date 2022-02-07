@@ -1,0 +1,92 @@
+package searchEngineComp;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+
+public class QueryProcessor {
+	
+	PositionalIndex index;
+	
+	public static void main(String[] args) throws IOException {
+		String folderName = "IR";
+		String query = "football score time";
+		int k = 10;
+		QueryProcessor q = new QueryProcessor(folderName);
+		q.topKDocs(query, k);
+	}
+
+	public QueryProcessor(String folderName) throws IOException{
+		this.index = new PositionalIndex(folderName);
+	}
+
+	public String[] topKDocs(String query, int k){
+		String[] Terms = query.split(" ");
+		String[] result = new String[k];
+		HashMap<Double, Document> map = new HashMap<>();
+		ArrayList<Document> docList = index.getDocsToCheck(Terms);
+		
+		for(Document d1 : docList) {
+			double val1 = index.Relevance(query, d1.getFileName());
+			map.put(val1, d1);
+		}
+		ArrayList<Double> temp = new ArrayList<>();
+		Set<Double> keys = map.keySet();
+		for(double x : keys) {
+			if(temp.size() == 0) {
+				temp.add(x);
+			}else {
+				int pos = 0;
+				boolean added = false;
+				for(double x2 : temp) {
+					if(x>x2) {
+						temp.add(pos,x);
+						added = true;
+						brea;
+					}
+				}
+				if(added = false) {
+					temp.add(x);
+				}
+		}
+			
+			
+			
+			
+			if(temp.size() == 0) {
+				temp.put(val1, d1);
+			}
+			else {
+				int pos = 0;
+				boolean added = false;
+				for(Document d2 : temp) {
+					double val2 = index.Relevance(query, d2.getFileName());
+					if(val1>val2) {
+						temp.add(pos, d1);
+						added = true;
+						break;
+					}
+					pos++;
+				}
+				if(added == false) {
+					temp.add(d1);
+				}
+			}
+		}
+		for(int  = 0; i < k; i++) {
+			temp.keySet().
+		}
+		for(int i = 0; i < k; i++) {
+			result[i] = temp.get(i).getFileName();
+			String doc = result[i];
+			double TPS = index.TPScore(query, doc);
+			double VSS = index.VSScore(query, doc);
+			double Rel = index.Relevance(query, doc);
+			System.out.println(doc +", "+ TPS +", "+ 
+					VSS +", "+ Rel);
+		}
+		return result;
+	}
+	
+}

@@ -1,0 +1,54 @@
+package bloomfilters;
+
+import java.util.Random;
+
+public class HashFunctionRan extends HashFunction{
+
+	int a, b, p;
+
+	public HashFunctionRan(int filterSize) {
+		Random r = new Random();
+		this.p = getPrime(filterSize);
+		this.a = r.nextInt(p);
+		this.b = r.nextInt(p);
+	}
+
+	public int hash(String s) {
+		return hash(s.hashCode());
+	}
+
+	private int hash(int x) {
+		return mod((a*x) + b, p);
+	}
+
+	private int getPrime(int n) {
+		boolean done = false;
+
+		while(!done) {
+			if(isPrime(n)) {
+				done = true;
+			}else {
+				if(n == 1 || n % 2 == 0) {
+					n += 1;
+				}else {
+					n += 2;
+				}
+			}
+		}
+		return n;
+	}
+
+	private boolean isPrime(int a) {
+		if(a > 2 && a % 2 == 0) {
+			return false;
+		}
+		int bound = (int) Math.sqrt(a) + 1;
+		for(int i = 1; i < bound; i+=2) {
+			if(a % i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+}

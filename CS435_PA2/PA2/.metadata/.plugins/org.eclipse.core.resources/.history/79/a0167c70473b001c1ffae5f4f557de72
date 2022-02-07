@@ -1,0 +1,13 @@
+package multisets;
+
+public class MinHashTime {
+	
+	public void timer(String folderName, int numPermutations) {		
+		long timeStart;
+		long timeEnd;
+		
+		timeStart = System.currentTimeMillis();
+		m = new minHashSimiliarites(folderName, numPermutations);
+		timeEnd = System.currentTimeMillis();
+	}
+}

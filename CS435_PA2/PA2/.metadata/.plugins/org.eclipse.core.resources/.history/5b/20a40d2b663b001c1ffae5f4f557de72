@@ -1,0 +1,70 @@
+package multisets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class MinHashSimilarities{
+	
+	private int minHashMatrix[][];
+	private int termDocMatrix[][];
+	private ArrayList<ParameterPair> paraList;
+	private int modP;
+
+	
+	/**
+	 * Creates an instance of MinHash and stores the termDocumentMatrix and minHashMatrix
+	 * @param folder
+	 * @param numPermutations
+	 * @throws IOException
+	 */
+	public MinHashSimilarities(String folder, int numPermutations) throws IOException{
+		MinHash m =  new MinHash(folder, numPermutations);
+		this.minHashMatrix = m.minHashMatrix();
+		this.termDocMatrix = m.termDocumentMatrix();
+		this.paraList = m.getParaList();
+		this.modP = m.getModP();
+	}
+
+	/**
+	 * Uses the exactJaccard function in the Document class
+	 * @param file1
+	 * @param file2
+	 * @return the calculated double
+	 * @throws IOException
+	 */
+	public double exactJaccard(String file1, String file2) throws IOException {
+		Document d1 = new Document(file1);
+		Document d2 = new Document(file2);
+		return d1.exactJaccard(d2);
+	}
+	
+	/**
+	 * Uses the approximateJaccard in the Document class
+	 * @param file1
+	 * @param file2
+	 * @return the calculated double
+	 * @throws IOException
+	 */
+	public double approximateJaccard(String file1, String file2) throws IOException {
+		Document d1 = new Document(file1);
+		Document d2 = new Document(file2);
+		return d1.approximateJaccard(d2);
+	}
+	
+	/**
+	 * Uses the calcMinHash function in the Document class along with the parameters and modP
+	 * calculated in from the MinHash to get all the MinHashs
+	 * @param fileName
+	 * @return
+	 * @throws IOException
+	 */
+	public int[] minHashSig(String fileName) throws IOException {
+		Document d = new Document(fileName);
+		for(ParameterPair pp: paraList){
+			d.getMinHashs().add(d.calcMinHash(pp.getA(), pp.getB(), modP));
+		}
+		return d.getMinHashsReturn();
+	}
+	
+	
+}

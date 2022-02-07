@@ -1,0 +1,30 @@
+package searchEngineComp;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import test.Graph;
+import test.PageRank;
+
+public class Test {
+	
+	public static void main(String args[]){
+		
+		HashMap<String, ArrayList<Integer>> termMap = new HashMap<>();
+		String s ="hi";
+		
+		termMap.put(s, 0);
+	
+		termMap.put(s, termMap.get(s) + 1);
+		
+		System.out.println(termMap.get(s));
+	}
+	
+
+}

@@ -1,0 +1,9 @@
+package multisets;
+
+public class MinHashTime {
+
+	
+	public int accuracy() {
+		return 0;
+	}
+}

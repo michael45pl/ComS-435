@@ -1,0 +1,7 @@
+1637256312291	Encapsulate field 'id'
+1637256319844	Encapsulate field 'name'
+1637256328006	Encapsulate field 'rank'
+1637256358910	Encapsulate field 'nextVertices'
+1637259813077	Encapsulate field 'numVertices'
+1637259823877	Encapsulate field 'numEdges'
+1637277441964	Rename type 'Collection'

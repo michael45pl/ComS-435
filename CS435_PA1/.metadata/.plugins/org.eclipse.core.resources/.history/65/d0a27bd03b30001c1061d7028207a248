@@ -1,0 +1,103 @@
+package bloomfilters;
+
+import java.util.BitSet;
+
+public class BloomFilterFNV{
+	
+	  private static final long FNV_64_INIT = 0xcbf29ce484222325L;
+	  private static final long FNV_64_PRIME = 0x100000001b3L;
+	  	
+	  BitSet data;
+	  int bitsPerElement;
+	  int setSize;
+	  int filterSize;
+	  int numHashes;
+	  int numData;
+
+	  public BloomFilterFNV(int setSize, int bitsPerElement) {
+		  this.setSize = setSize;
+		  this.bitsPerElement = bitsPerElement;
+		  filterSize = setSize * bitsPerElement;
+		  numHashes = (int) Math.log(2)*filterSize/setSize;
+		  data = new BitSet();
+		  numData = 0;
+		  }
+	  
+	  public int fnv(String s) {
+		  int h = (int) FNV_64_INIT;
+		  for(int i = 0; i < s.length(); i++) {
+			  char ch = s.charAt(i);
+			  h=h^ch;
+			  h = (int) ((h * FNV_64_PRIME)% Math.pow(2, 64));
+		  }
+		  return h;
+	  }
+	  
+	  public int[] hashFunc(String s) {
+		  int[] result = new int[numHashes];
+		  int a = fnv(s);
+		  int b = a * hashCode(s);
+		 
+		  for(int i = 0; i < numHashes; i++) {
+			  result[i] = (a + b*i) % filterSize;
+			  if(result[i] < 0)
+				  result[i] =- result[i];
+		  }
+		  return result;
+	  }
+	  
+	  public int hashCode(String s) {
+		  int h = 0;
+		  int n = s.length();
+		  
+		  for(int i = 0; i < s.length(); i++) {
+			  char ch = s.charAt(i);
+			  h += ch*31^(n-(i+1));
+		  }
+		  
+		 return h;
+	  }
+	  
+	  public void add(String s) {
+		 String str = s.toLowerCase();
+		 if(appears(str))
+			 return;
+		 int[] marks = hashFunc(str);
+		 for(int i = 0; i < marks.length; i++) {
+			 if(!data.get(marks[i]))
+				 data.flip(marks[i]);
+		 }
+		 numData++;
+	  }
+	  
+	  
+	  public boolean appears(String s) {
+		  String str = s.toLowerCase();
+		  int[] marks = hashFunc(str);
+		  
+		  for(int i = 0; i < marks.length; i++) {
+			  if(data.get(marks[i]))
+				  return false;
+		  }
+		  return true;	    
+	  }
+	  
+	  public int filterSize() {
+		  return filterSize;
+	  }
+	  
+	  public int dataSize() {
+		  return numData;
+	  }
+	  
+	  public int numHashes() {
+		  return numHashes;
+	  }
+	  
+	  public boolean getBit(int j){
+	    if (!data.get(j)) 
+	    	return false;
+	    return true;
+	  }
+}
+	 

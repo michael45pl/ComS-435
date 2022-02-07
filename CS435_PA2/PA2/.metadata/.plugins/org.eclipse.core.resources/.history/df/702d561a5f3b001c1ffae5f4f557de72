@@ -1,0 +1,30 @@
+package multisets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class SimilarDocuments {
+	
+	private LSH lsh;
+
+	public SimilarDocuments(String folder, int numPermutations,  double simThreshold) throws IOException {
+		MinHash mh = new MinHash(folder, numPermutations);
+		int[][]mhMatrix = mh.minHashMatrix();//get Matrix from MinHash
+		String[] docNames = mh.allDocs();//get file names
+		
+		double s = simThreshold;
+		int r = 1;//start with only 1 row
+		int tempResult = (int) Math.ceil((1/Math.pow(s, r))*r);
+		while(numPermutations > tempResult && r < numPermutations){
+			r++;
+			tempResult = (int)Math.ceil((1/Math.pow(s, r))*r);
+		}
+		int bands = numPermutations/r;//divide permutations by rows to get bands
+		
+		lsh = new LSH(mhMatrix, docNames, bands);//construct the LSH
+	}
+	
+	public ArrayList<String> similaritySearch(String document) {
+		return lsh.retrieveSim(document);
+	}
+}

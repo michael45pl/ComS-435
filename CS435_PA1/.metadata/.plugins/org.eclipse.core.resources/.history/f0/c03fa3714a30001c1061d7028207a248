@@ -1,0 +1,80 @@
+package bloomfilters;
+
+import java.util.BitSet;
+import java.util.Random;
+
+public class MultiMultiBloomFilter{
+
+	public int filterSize;
+	public int numData;
+	public int numHashes;	
+	public int[][] k_arrays;
+	public HashFunctionRan[] hashFuncs;
+	
+	
+	public MultiMultiBloomFilter(int N, int k) {
+		numData = 0;
+		numHashes = k;
+		filterSize = k*N;
+		k_arrays = new int[k][N];
+		for(int i = 0; i < k; i++) {
+			for(int j = 0; j < N; j++) {
+				k_arrays[i][j] = 0;
+			}
+		}
+
+		hashFuncs = new HashFunctionRan[numHashes];
+		
+		for(int i = 0; i < numHashes; i++) {
+			hashFuncs[i] = new HashFunctionRan(filterSize);
+		}
+		
+	  }
+	  
+	  
+	public void add(String s) {
+		int key;
+		s = s.toLowerCase();
+		
+		if(!appears(s)) {
+			numData++;
+		}
+		
+		for(int i = 0; i < numHashes; i++) {
+			key = hashFuncs[i].hash(s);
+			k_arrays[i][key] = 1;
+		}
+	}
+	
+	public boolean appears(String s) {
+		int key;
+		s = s.toLowerCase();
+		for(int i = 0; i < numHashes; i++) {
+			key = hashFuncs[i].hash(s);
+			if(k_arrays[i][key] != 1){
+				return false;
+			}
+		}
+		return true;
+	}
+	  
+	  public int filterSize() {
+		  return filterSize;
+	  }
+	  
+	  public int dataSize() {
+		  return numData;
+	  }
+	  
+	  public int numHashes() {
+		  return numHashes;
+	  }
+	  
+	  public boolean getBit(int j){
+	    array_num = j/
+		  
+		  if (!data.get(j)) 
+	    	return false;
+	    return true;
+	  }
+}

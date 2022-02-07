@@ -1,0 +1,8 @@
+package multisets;
+
+public class MinHashAccuracy {
+
+	public int accuracy() {
+		return 0;
+	}
+}

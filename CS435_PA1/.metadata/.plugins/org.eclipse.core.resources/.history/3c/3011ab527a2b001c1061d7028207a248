@@ -1,0 +1,26 @@
+package bloomfilters;
+
+public class Test {
+
+	public static void main (String[] args) {
+		String s = "Hello";
+		System.out.println(s.getBytes());
+		System.out.println(hashCode(s));
+	}
+	
+	
+	  public static int hashCode(String s) {
+		  int h = 0;
+		  int n = s.length();
+		  
+		  for(int i = 0; i < s.length(); i++) {
+			  char ch = s.charAt(i);
+			  h += ch*31^(n-(i+1));
+		  }
+		  
+		 return h;
+	  }
+	  
+}
+
+

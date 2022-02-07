@@ -1,0 +1,37 @@
+package multisets;
+
+import java.io.File;
+
+public class MinHashSimilarities extends MinHash{
+	
+	private File folder;
+	private String folderPath;
+	private int numPermutations;
+	private int minHashMatrix[][];
+	private int termDocMatrix[][];
+
+	
+	
+	public MinHashSimilarities(String folder, int numPermutations) {
+		MinHash m =  new MinHash(folder, numPermutations);
+		this.folder = new File(folder);
+		this.folderPath = folder;
+		this.numPermutations = numPermutations;
+		this.minHashMatrix = m.minHashMatrix();
+		this.termDocMatrix = m.termDocumentMatrix();
+	}
+
+	public double exactJaccard(String file1, String file2) {
+		return 0;
+		
+	}
+	
+	public double approximateJaccard(String file1, String file2) {
+		return 0;
+	}
+	
+	public int[] minHashSig(String fileName) {
+		return null;
+	}
+	
+}

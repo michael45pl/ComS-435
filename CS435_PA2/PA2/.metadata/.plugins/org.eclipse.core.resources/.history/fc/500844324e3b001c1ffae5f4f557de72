@@ -1,0 +1,80 @@
+package multisets;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class MinHashTime {
+	
+	public void timer(String folderName, int numPermutations) throws IOException {		
+		long timeStart;
+		long timeEnd;
+		
+		timeStart = System.currentTimeMillis();
+		MinHashSimilarities mhs = new MinHashSimilarities(folderName, numPermutations);
+		timeEnd = System.currentTimeMillis();
+		
+		System.out.println("Time taken to construct MinHashSimilarities in millisconds is: " + (timeStart-timeEnd));
+	
+		//get all documents in the folder
+		ArrayList<Document> allDocuments = new ArrayList<>();
+		File folder = new File(folderName);	
+		File[] listOfFiles = folder.listFiles();
+		Document d;
+		for(int i=0;i<listOfFiles.length;i++){
+			d = new Document(listOfFiles[i].getAbsolutePath());	
+			allDocuments.add(d);
+		}
+		
+		
+		Document tempD1;
+		Document tempD2;
+		float exactJacSimilarity;
+		
+		timeStart = System.currentTimeMillis();
+
+		for(int i = 0; i < allDocuments.size(); i++){
+			tempD1 = allDocuments.get(i);
+			for(int j = i+1; j<allDocuments.size(); j++){
+				tempD2 = allDocuments.get(j);
+				exactJacSimilarity = tempD1.exactJaccard(tempD2);
+			}
+		}
+		timeEnd = System.currentTimeMillis();
+		
+		System.out.println("Time taken to compute every exact Jaccard Similarity in millisconds is: " + (timeStart-timeEnd));
+		
+		d = null;
+		int approximateJaccardSimiliarity = 0;
+		int[] permChecking;
+		
+		timeStart = System.currentTimeMillis();
+		int[][] minHashMatrix = new int[allDocuments.size()][numPermutations]; //documents are rows
+		
+		int[] doc;
+		for(int i = 0; i < allDocuments.size(); i++) {
+			if(contents[i].isFile()) {
+				doc = minHashSig(allDocuments.get(i).getName()); 
+				
+				for(int j = 0; j < numPermutations; j++) {
+					minHashMatrix[i][j] = doc[j]; //documents are rows
+				}
+			} 
+		}
+		
+		for(int i = 0; i < numPermutations; i++) {
+			permChecking = minHashMatrix[i];
+			for(int j = 0; j< allDocuments.size(); j++) {
+				if(permChecking[j] == minHashMatrix[j][i])
+					approximateJaccardSimiliarity++;
+			}
+		}
+		
+		
+		
+		timeEnd = System.currentTimeMillis();
+		
+		System.out.println("Time taken to estimate every pair of Jacard Similarity in millisconds is: " + (timeStart-timeEnd));
+	
+	}
+}

@@ -1,0 +1,13 @@
+package multisets;
+
+public class LSH {
+
+	public LSH(int[][] minHashMatrix, String[] docNames, int bands) {
+		
+	}
+	
+	public String[] retrieveSim(String docName) {
+		return null;
+	}
+	
+}

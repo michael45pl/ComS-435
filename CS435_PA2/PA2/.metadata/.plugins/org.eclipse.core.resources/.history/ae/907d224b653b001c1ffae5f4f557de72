@@ -1,0 +1,44 @@
+package multisets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class MinHashSimilarities{
+	
+	private int minHashMatrix[][];
+	private int termDocMatrix[][];
+	private ArrayList<ParameterPair> paraList;
+	private int modP;
+
+	
+	
+	public MinHashSimilarities(String folder, int numPermutations) throws IOException{
+		MinHash m =  new MinHash(folder, numPermutations);
+		this.minHashMatrix = m.minHashMatrix();
+		this.termDocMatrix = m.termDocumentMatrix();
+		this.paraList = m.getParaList();
+		this.modP = m.getModP();
+	}
+
+	public double exactJaccard(String file1, String file2) throws IOException {
+		Document d1 = new Document(file1);
+		Document d2 = new Document(file2);
+		return d1.exactJaccard(d2);
+	}
+	
+	public double approximateJaccard(String file1, String file2) throws IOException {
+		Document d1 = new Document(file1);
+		Document d2 = new Document(file2);
+		return d1.approximateJaccard(d2);
+	}
+	
+	public int[] minHashSig(String fileName) throws IOException {
+		Document d = new Document(fileName);
+		for(ParameterPair pp: paraList){
+			d.getMinHashs().add(d.calcMinHash(pp.getA(), pp.getB(), modP));
+		}
+		return d.getMinHashsReturn();
+	}
+	
+	
+}

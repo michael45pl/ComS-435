@@ -1,0 +1,12 @@
+package multisets;
+
+public class SimilarDocuments {
+
+	public SimilarDocuments(String folder, int numPermutations,  double simThreshold) {
+		
+	}
+	
+	public String[] similaritySearch(String document) {
+		return null;
+	}
+}

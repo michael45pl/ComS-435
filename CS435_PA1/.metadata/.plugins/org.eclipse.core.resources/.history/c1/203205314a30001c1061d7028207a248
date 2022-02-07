@@ -1,0 +1,5 @@
+package bloomfilters;
+
+public class HashFunctionRan {
+
+}

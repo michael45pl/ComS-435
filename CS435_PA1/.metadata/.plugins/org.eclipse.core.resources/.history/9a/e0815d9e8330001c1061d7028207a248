@@ -1,0 +1,103 @@
+package bloomfilters;
+
+import java.util.BitSet;
+
+public class BloomFilterFNV{
+
+	public int filterSize;
+	public int numData;
+	public int numHashes;	
+	public BitSet filter;
+	public HashFunction[] hashFuncs;
+	public int bitsPerElement;  
+
+	public BloomFilterFNV(int setSize, int bitsPerElement) {
+		bitsPerElement = bitsPerElement;
+		filterSize = setSize * bitsPerElement;
+		numHashes = (int) Math.round(Math.log(2) * (filterSize / setSize));
+		filter = new BitSet(filterSize);
+		hashFuncs = new HashFunction[numHashes];
+		numData = 0;
+		hashFuncs[0] = new HashFunctionFNV();
+	}
+
+	private class HashFunctionFNV extends HashFunction
+	{
+		private static final long FNV_64_INIT = 0xcbf29ce484222325L;
+		private static final long FNV_64_PRIME = 1099511628211L;
+
+
+		public int hash(String s) {
+			return hash(s.getBytes());
+		}
+
+		public int hash(byte[] a) {
+			long result = FNV_64_INIT;
+			int len = a.length;
+			for(int i = 0; i < len; i++) {
+				result ^= a[i];
+				result = result * FNV_64_PRIME;
+			}
+			return mod(result, filterSize);
+		}
+	}
+
+	public void add(String s)
+	{
+		int key;
+		s = s.toLowerCase();
+
+		if(!appears(s)){
+			numData++;
+		}
+
+		for(int i = 0; i < numHashes; i++){
+			s = s + i;
+			key = hashFuncs[0].hash(s);
+			filter.set(key);
+		}	
+	}	
+
+
+	public boolean appears(String s)
+	{
+		int key;
+		s = s.toLowerCase();
+
+		for(int i = 0; i < numHashes; i++){
+			s = s + i;
+			key = hashFuncs[0].hash(s);
+			if(!filter.get(key)){
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	public int filterSize()
+	{
+		return filterSize;
+	}
+
+
+	public int dataSize()
+	{
+		return numData;
+	}
+
+
+	public int numHashes()
+	{
+		return numHashes;
+	}
+
+
+	public boolean getBit(int j) {
+		return filter.get(j);
+	}
+
+
+
+}
+

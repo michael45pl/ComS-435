@@ -1,0 +1,107 @@
+package searchEngineComp;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
+import test.Graph;
+import test.PageRank;
+
+public class QueryProcessor {
+
+	PositionalIndex index;
+	
+	public static void main(String args[]) throws IOException{
+		String folderName = "IR";
+	
+		QueryProcessor q = new QueryProcessor(folderName);
+		q.topKDocs("miss bad", 10);
+	}
+
+	public QueryProcessor(String folderName) throws IOException{
+		this.index = new PositionalIndex(folderName);
+	}
+
+	public String[] topKDocs(String query, int k){
+		String[] result = new String[k];
+		HashMap<Document, Double> map = new HashMap<>();
+		HashMap<Double, ArrayList<Document>> map2 = new HashMap<>();
+		ArrayList<Pair> list = new ArrayList<>();
+		ArrayList<Document> docList = index.getDocList();
+
+		for(Document d : docList) {
+			double val = index.Relevance(query, d.getFileName());
+			if(map2.containsKey(val)) {
+				map2.get(val).add(d);
+			}else {
+				ArrayList<Document> tempArr = new ArrayList<>();
+				tempArr.add(d);
+				map2.put(val, tempArr);
+			}
+			map.put(d, val);
+			Pair p = new Pair(d, val);
+			list.add(p);
+		}
+		
+		ArrayList<Double> temp = new ArrayList<>();
+		
+		temp.addAll(map2.keySet());
+		
+		Collections.sort(temp, Collections.reverseOrder());
+		
+		ArrayList<Document> r = new ArrayList<>();
+		int i =0;
+		while(r.size() < k) {
+			temp.get(i);
+			r.addAll(map2.get(temp.get(i)));
+			i++;
+		}
+		
+		for(int j = 0; j < k; j++) {
+			result[j] = r.get(j);
+		}
+		
+		
+		/** 
+		for(double x : map.values()) {
+			if(temp.size() == 0) {
+				temp.add(x);
+			}else {
+				int pos = 0;
+				boolean added = false;
+				for(double x2 : temp) {
+					if(x>x2 || pos > k) {
+						temp.add(pos,x);
+						added = true;
+						break;
+					}
+					pos++;
+				}
+				if(!added) {
+					temp.add(x);
+				}
+			}
+		}
+
+		for(int i = 0; i < k; i++) {
+			for(Pair a : list) {
+				if(a.getRev() == temp.get(i)) {
+					result[i] = a.getName();
+					list.remove(a);
+					break;
+				}
+			}
+			String doc = result[i];
+			double TPS = index.TPScore(query, doc);
+			double VSS = index.VSScore(query, doc);
+			double Rel = index.Relevance(query, doc);
+			System.out.println(doc +", "+ TPS +", "+ 
+					VSS +", "+ Rel);
+		}
+		return result;**/
+		
+	}
+}
+
